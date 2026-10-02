@@ -255,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     p.add_argument("--device", default="/dev/input/event1",
                    help="evdev input node (default: /dev/input/event1)")
-    p.add_argument("--alias", default="SlothOS Controller",
+    p.add_argument("--alias", default="SlothOS XBOX Controller",
                    help="Bluetooth display name (default: 'SlothOS Controller')")
     p.add_argument("--sdp-record", default=DEFAULT_SDP_RECORD,
                    help="Path to the hand-built HID SDP record XML")

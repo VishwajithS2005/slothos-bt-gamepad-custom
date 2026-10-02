@@ -5,7 +5,7 @@ Requires=bluetooth.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /usr/local/slothos/bt_gamepad_xbox/main.py --verbose
+ExecStart=/usr/bin/python3 /usr/local/slothos/bt_gamepad_xbox/main.py --alias "SlothOS XBOX Controller" --verbose
 StandardOutput=append:/var/log/bt_gamepad_xbox.log
 StandardError=append:/var/log/bt_gamepad_xbox.log
 WorkingDirectory=/usr/local/slothos/bt_gamepad_xbox
