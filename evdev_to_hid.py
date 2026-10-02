@@ -2,30 +2,34 @@
 
 import evdev.ecodes as e
 
-# Spoofing standard Xbox Wireless Controller layout based strictly on RG35XX H hardware codes
-# Ignored standard e.BTN_* definitions as the Anbernic firmware reuses codes arbitrarily.
+# Android natively reads HID Buttons sequentially using the standard Linux Gamepad layout.
+# It expects: 1=A, 2=B, 3=C, 4=X, 5=Y, 6=Z, 7=L1, 8=R1, 9=L2, 10=R2, 11=Select, 12=Start, 13=Mode, 14=L3, 15=R3.
+# We must skip 3 (C) and 6 (Z) so everything lands on the exact expected buttons for Minecraft.
+
 BUTTON_MAP = {
-    304: 1,   # A -> Xbox A
-    305: 2,   # B -> Xbox B
-    307: 3,   # X -> Xbox X
-    306: 4,   # Y -> Xbox Y
-    308: 5,   # L1 -> Xbox LB
-    309: 6,   # R1 -> Xbox RB
-    310: 7,   # Select -> Xbox View
-    311: 8,   # Start -> Xbox Menu
-    313: 9,   # L3 -> Xbox LSB
-    316: 10,  # R3 -> Xbox RSB
-    312: 11,  # Function -> Xbox Logo
+    304: 1,   # A      -> HID 1  (Android A)
+    305: 2,   # B      -> HID 2  (Android B)
+              # Skip 3 (Android C - Ignored by Minecraft)
+    307: 4,   # X      -> HID 4  (Android X)
+    306: 5,   # Y      -> HID 5  (Android Y)
+              # Skip 6 (Android Z - Ignored by Minecraft)
+    308: 7,   # L1     -> HID 7  (Android L1 / LB)
+    309: 8,   # R1     -> HID 8  (Android R1 / RB)
+    314: 9,   # L2     -> HID 9  (Android L2 / LT - Places items)
+    315: 10,  # R2     -> HID 10 (Android R2 / RT - Destroys items)
+    310: 11,  # Select -> HID 11 (Android Select / View)
+    311: 12,  # Start  -> HID 12 (Android Start / Menu)
+    312: 13,  # Func   -> HID 13 (Android Mode / Xbox Logo)
+    313: 14,  # L3     -> HID 14 (Android L3 / LSB)
+    316: 15,  # R3     -> HID 15 (Android R3 / RSB)
 }
 
-# Translate digital shoulder buttons into Analog Trigger Axes
-# (offset 4 = Brake/LT, offset 5 = Gas/RT in the 6-byte axis block)
-TRIGGER_BUTTON_AXES = {
-    314: (4, 127),  # L2 button -> Xbox LT (Brake)
-    315: (5, 127),  # R2 button -> Xbox RT (Gas)
-}
+# Since we mapped L2 and R2 directly to HID Buttons 9 and 10, 
+# we no longer need to spoof them as Analog Axes for Android.
+# Leaving this dict empty safely bypasses the axis spoofing in main.py.
+TRIGGER_BUTTON_AXES = {}
 
-# Mapping exact Anbernic numerical axis codes to Xbox HID offsets
+# The sticks are perfect as confirmed
 AXIS_MAP = {
     2: 0,   # Left Analog X -> HID X (offset 0)
     3: 1,   # Left Analog Y -> HID Y (offset 1)
