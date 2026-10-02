@@ -1,0 +1,18 @@
+[Unit]
+Description=SlothOS Bluetooth HID Gamepad Daemon (Xbox Mode)
+After=bluetooth.service slothos-bt.service
+Requires=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/slothos/bt_gamepad_xbox/main.py --verbose
+StandardOutput=append:/var/log/bt_gamepad_xbox.log
+StandardError=append:/var/log/bt_gamepad_xbox.log
+WorkingDirectory=/usr/local/slothos/bt_gamepad_xbox
+Restart=on-failure
+RestartSec=3
+User=root
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
