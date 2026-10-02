@@ -2,40 +2,42 @@
 
 import evdev.ecodes as e
 
-# Spoofing standard Xbox Wireless Controller layout
+# Spoofing standard Xbox Wireless Controller layout based strictly on RG35XX H hardware codes
+# Ignored standard e.BTN_* definitions as the Anbernic firmware reuses codes arbitrarily.
 BUTTON_MAP = {
-    e.BTN_SOUTH:   1,   # 304 (A) -> Xbox A
-    e.BTN_EAST:    2,   # 305 (B) -> Xbox B
-    e.BTN_NORTH:   3,   # 307 (X) -> Xbox X
-    e.BTN_WEST:    4,   # 308 (Y) -> Xbox Y
-    e.BTN_TL:      5,   # 310 (L1) -> Xbox LB
-    e.BTN_TR:      6,   # 311 (R1) -> Xbox RB
-    e.BTN_SELECT:  7,   # 314 (Select) -> Xbox View
-    e.BTN_START:   8,   # 315 (Start) -> Xbox Menu
-    e.BTN_WEST:    9,   # L3 (Stick click fallback) -> Xbox LSB
-    e.BTN_Z:       10,  # R3 (Stick click fallback) -> Xbox RSB
-    e.BTN_MODE:    11,  # 316 (Mode) -> Xbox Logo
+    304: 1,   # A -> Xbox A
+    305: 2,   # B -> Xbox B
+    307: 3,   # X -> Xbox X
+    306: 4,   # Y -> Xbox Y
+    308: 5,   # L1 -> Xbox LB
+    309: 6,   # R1 -> Xbox RB
+    310: 7,   # Select -> Xbox View
+    311: 8,   # Start -> Xbox Menu
+    313: 9,   # L3 -> Xbox LSB
+    316: 10,  # R3 -> Xbox RSB
+    312: 11,  # Function -> Xbox Logo
 }
 
 # Translate digital shoulder buttons into Analog Trigger Axes
-# (offset 4 = Brake/L2, offset 5 = Gas/R2 in the 6-byte axis block)
+# (offset 4 = Brake/LT, offset 5 = Gas/RT in the 6-byte axis block)
 TRIGGER_BUTTON_AXES = {
-    e.BTN_TL2: (4, 127),  # 312 (L2) 
-    e.BTN_TR2: (5, 127),  # 313 (R2) 
+    314: (4, 127),  # L2 button -> Xbox LT (Brake)
+    315: (5, 127),  # R2 button -> Xbox RT (Gas)
 }
 
+# Mapping exact Anbernic numerical axis codes to Xbox HID offsets
 AXIS_MAP = {
-    e.ABS_Z:    0,   # LEFT stick X -> HID X (offset 0)
-    e.ABS_RZ:   1,   # LEFT stick Y -> HID Y (offset 1)
-    e.ABS_RX:   2,   # RIGHT stick X -> HID Z (offset 2)
-    e.ABS_RY:   3,   # RIGHT stick Y -> HID Rz (offset 3)
+    2: 0,   # Left Analog X -> HID X (offset 0)
+    3: 1,   # Left Analog Y -> HID Y (offset 1)
+    4: 2,   # Right Analog X -> HID Z (offset 2)
+    5: 3,   # Right Analog Y -> HID Rz (offset 3)
 }
 
 AXIS_ALIASES = {}
 
 # ---------------------------------------------------------------- D-pad
-DPAD_AXIS_X = e.ABS_HAT0X
-DPAD_AXIS_Y = e.ABS_HAT0Y
+DPAD_AXIS_X = 16  # ABS_HAT0X
+DPAD_AXIS_Y = 17  # ABS_HAT0Y
 
 def hat_from_axes(x: int, y: int) -> int:
     if x == 0 and y == 0:
