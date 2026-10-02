@@ -5,6 +5,7 @@ Requires=bluetooth.service
 
 [Service]
 Type=simple
+ExecStartPre=-/bin/sh -c "hciconfig hci0 name 'SlothOS XBOX Controller'"
 ExecStart=/usr/bin/python3 /usr/local/slothos/bt_gamepad_xbox/main.py --alias "SlothOS XBOX Controller" --verbose
 StandardOutput=append:/var/log/bt_gamepad_xbox.log
 StandardError=append:/var/log/bt_gamepad_xbox.log

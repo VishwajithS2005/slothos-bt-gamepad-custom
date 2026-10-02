@@ -83,9 +83,12 @@ log "Copying Xbox stack to ${REMOTE_DIR}/…"
 "${SSH[@]}" "${SSH_USER}@${DEVICE}" "mkdir -p ${REMOTE_DIR}"
 "${SCP[@]}" -q "${HERE}"/{main.py,bt_l2cap_v2.py,BluezProfile.py,BluezAgent.py,hid_descriptor.py,evdev_to_hid.py,evdev_reader.py,sdp_record_gamepad.xml,sdp_record_pnp.xml,set_did.py,requirements.txt} "${SSH_USER}@${DEVICE}:${REMOTE_DIR}/" || log_die "scp of stack failed."
 
-# INJECT XBOX VID/PID ON THE FLY
-log "Spoofing Xbox Wireless Controller VID/PID in SDP records..."
-"${SSH[@]}" "${SSH_USER}@${DEVICE}" "sed -i 's/0x1209/0x045E/g; s/0x5017/0x02FD/g' ${REMOTE_DIR}/sdp_record_pnp.xml"
+# INJECT XBOX VID/PID AND NAME ON THE FLY
+log "Spoofing Xbox Wireless Controller VID/PID and Name in SDP records..."
+"${SSH[@]}" "${SSH_USER}@${DEVICE}" "
+  sed -i 's/0x1209/0x045E/g; s/0x5017/0x02FD/g' ${REMOTE_DIR}/sdp_record_pnp.xml
+  sed -i 's/SlothOS Controller/SlothOS XBOX Controller/g' ${REMOTE_DIR}/sdp_record_gamepad.xml
+"
 
 log "Installing systemd units…"
 "${SSH[@]}" "${SSH_USER}@${DEVICE}" "mkdir -p /etc/systemd/system/bluetooth.service.d"
